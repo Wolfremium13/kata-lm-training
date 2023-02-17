@@ -21,6 +21,10 @@ class StubSensorWithMotion(MotionSensor):
     def is_detecting_motion(self) -> bool:
         return True
 
+class StubExplosiveSensor(MotionSensor):
+    def is_detecting_motion(self) -> bool:
+        raise Exception("BOOM!")
+
 class SpyVideoRecorder(VideoRecorder):
     stop_recording_calls = 0
     start_recording_calls = 0
@@ -53,4 +57,9 @@ class TestCameraShould(TestCase):
         
         assert_that(spy_recorder.start_recording_calls).is_equal_to(1)
     
-    # recorder should stop recording when sensor return an unexpected error.
+    def test_stop_recording_when_sensor_fails(self):
+        stub_sensor = StubExplosiveSensor()
+        spy_recorder = SpyVideoRecorder()
+        camera = Camera(stub_sensor, spy_recorder)
+        
+        assert_that(camera.obtain_status).raises(Exception)
