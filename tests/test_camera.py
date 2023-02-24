@@ -6,8 +6,8 @@
 from unittest import TestCase
 
 from assertpy import assert_that
-from src.camera import Camera
 
+from src.camera import Camera
 from src.motion_sensor import MotionSensor
 from src.video_recorder import VideoRecorder
 

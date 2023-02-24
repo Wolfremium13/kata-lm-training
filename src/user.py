@@ -5,4 +5,4 @@ from dataclasses import dataclass
 class User:
     username: str
     password: str
-    email:str
+    email: str

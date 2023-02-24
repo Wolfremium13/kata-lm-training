@@ -1,39 +1,28 @@
 
 
 from unittest import TestCase
+
 from assertpy import assert_that
 
 from src.repository import Repository
 from src.user import User
-
-
 
 # API Repository -> User -> Repository Impl -> In Memory DB
 
 # - Validar si el usuario existe
 # - Validar el correo
 
-class RepositorySpy(Repository):
-    _user_save = None
+class RepositoryDatabase(Repository):
+    users: list[User] = []
+    
     def save(self, user: User) -> None:
-        self._user_save = user
+        self.users.append(user)
     
-    def get_user(self, user_name: str) -> User:
-        pass
-    
-    def assert_user_is_saved(self, user: User) -> None:
-        assert_that(self._user_save).is_equal_to(user)
+    def get_user(self, username: str) -> User:
+        return [u for u in self.users if u.username == username][0]
     
 
 class TestRepositoryShould(TestCase):
-    
-    def test_save_user(self):
-        repository = RepositorySpy()
-        user = User("username", "password", "email")
-        
-        repository.save(user)
-
-        repository.assert_user_is_saved(user)
         
     def test_save_in_database(self):
         repository = RepositoryDatabase()
@@ -43,7 +32,5 @@ class TestRepositoryShould(TestCase):
         repository.save(given_user)
         expected_user = repository.get_user(username)
         
-        assert_that(given_user).is_equal_to(given_user)
-        
-        
+        assert_that(given_user).is_equal_to(expected_user)
         
