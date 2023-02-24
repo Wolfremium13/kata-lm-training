@@ -12,7 +12,7 @@ from src.user import User
 # - Validar si el usuario existe
 # - Validar el correo
 
-class RepositoryDatabase(Repository):
+class RepositoryDatabaseInMemory(Repository):
     users: list[User] = []
     
     def save(self, user: User) -> None:
@@ -25,7 +25,7 @@ class RepositoryDatabase(Repository):
 class TestRepositoryShould(TestCase):
         
     def test_save_in_database(self):
-        repository = RepositoryDatabase()
+        repository = RepositoryDatabaseInMemory()
         username = "leto"
         given_user = User(username, "password", "email")
         
@@ -33,4 +33,5 @@ class TestRepositoryShould(TestCase):
         expected_user = repository.get_user(username)
         
         assert_that(given_user).is_equal_to(expected_user)
-        
+    
+    
